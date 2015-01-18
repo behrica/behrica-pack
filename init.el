@@ -5,35 +5,17 @@
 
 ;; Load bindings config
 (live-load-config-file "bindings.el")
+(live-load-config-file "magit-config.el")
+(live-load-config-file "org-config.el")
 
 (live-add-pack-lib "ess/lisp")
-(setq ess-directory-containing-R "c:/Users/behrica/apps")
 (load "ess-site")
 
 
-(defun my-R-execute-options-w32 ()
-     (ess-command "setInternet2(T);library(tcltk);\n"))
-
-(defun my-R-execute-options ()
-     (ess-command "library(behricaR);options(max.print = 1000,timeout = 10,menu.graphics = F)\n"))
-
-(when (eq window-system 'w32)
- (add-hook 'ess-R-post-run-hook 'my-R-execute-options-w32))
-
-(add-hook 'ess-R-post-run-hook 'my-R-execute-options)
-
 (define-key ess-mode-map (kbd "C-<return>") 'ess-eval-region-or-line-and-step)
 
-
-
-;(require 'poly-R)
-;(require 'poly-markdown)
-
-;;; R modes
-;(add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
-;(add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
-;(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
-
+(setq url-using-proxy t)
+(setq url-proxy-services  '(("http" . "127.0.0.1:3128")))
 
 (autoload 'gfm-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
@@ -61,17 +43,8 @@
 
 
 (if (eq window-system 'x)
-    (global-set-key [f11] 'toggle-fullscreen-x11)
-    (global-set-key [f11] 'toggle-frame-fullscreen))
+    (global-set-key [f11] 'toggle-fullscreen-x11))
 
-
-(defadvice magit-expand-git-file-name
-  (before magit-expand-git-file-name-cygwin activate)
-  "Handle Cygwin directory names such as /cygdrive/c/*
-by changing them to C:/*"
-  (when (string-match "^/cygdrive/\\([a-z]\\)/\\(.*\\)" filename)
-(setq filename (concat (match-string 1 filename) ":/"
-                       (match-string 2 filename)))))
 
 (define-key global-map (kbd "C-c C-SPC") 'er/expand-region)
 
@@ -92,13 +65,8 @@ by changing them to C:/*"
      (setq comint-buffer-maximum-size old-max)))
 
 
-(setq org-agenda-files (quote ("D:/Dropbox/sync/org")))
-(global-set-key "\C-ca" 'org-agenda)
-(setq org-todo-keywords
-      '((sequence "TODO" "STARTED" "WAITING" "|" "DONE" "CANCELLED" )))
 
 (setq ispell-silently-savep t)
-
 
 
 
@@ -109,4 +77,16 @@ by changing them to C:/*"
 
 
 
-(dired (or (getenv "DROPBOX_HOME") (getenv "HOME")))
+(setq gnus-select-method
+      '(nnimap "localhost"
+               (nnimap-server-port 1143)
+               (nnimap-stream network)
+               ))
+
+
+
+
+(server-start)
+
+
+(dired "~/Dropbox")
