@@ -75,16 +75,16 @@
 
 
 
-
-
 (setq gnus-select-method
       '(nnimap "localhost"
                (nnimap-server-port 1143)
-               (nnimap-stream network)
-               ))
+               (nnimap-stream network)))
 
 
 
+
+
+(require 'git-timemachine)
 
 (server-start)
 
