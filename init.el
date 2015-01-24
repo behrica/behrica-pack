@@ -128,8 +128,14 @@
                  (not (equal f ".")))
         (add-to-list 'load-path name)))))
 
-                                        (require 'rich-minority)
+(require 'rich-minority)
 (require 'smart-mode-line)
+
+(custom-set-variables
+ '(custom-safe-themes
+  (quote
+   ("e56f1b1c1daec5dbddc50abd00fcd00f6ce4079f4a7f66052cf16d96412a09a9" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default))))
+
 (sml/setup)
 
 (dired "~/Dropbox")
