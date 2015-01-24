@@ -7,12 +7,10 @@
 (live-load-config-file "bindings.el")
 (live-load-config-file "magit-config.el")
 (live-load-config-file "org-config.el")
-
-(live-add-pack-lib "ess/lisp")
-(load "ess-site")
+(live-load-config-file "ess-config.el")
 
 
-(define-key ess-mode-map (kbd "C-<return>") 'ess-eval-region-or-line-and-step)
+
 
 (setq url-using-proxy t)
 (setq url-proxy-services  '(("http" . "127.0.0.1:3128")))
@@ -69,10 +67,24 @@
 (setq ispell-silently-savep t)
 
 
-
 (autoload 'sunrise-commander "sunrise-commander.el")
 (require 'sunrise-commander)
 
+
+(setq gnus-select-method
+      '(nnimap "gmail"
+	       (nnimap-address "imap.gmail.com")
+	       (nnimap-server-port 993)
+	       (nnimap-stream ssl)))
+
+(setq message-send-mail-function 'smtpmail-send-it
+      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+      smtpmail-auth-credentials '(("smtp.gmail.com" 587
+				   "carsten.behring@gmail.com" nil))
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 587
+      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
 
 
 (setq gnus-select-method
@@ -86,7 +98,38 @@
 
 (require 'git-timemachine)
 
+
+
 (server-start)
 
+(set-frame-parameter nil 'fullscreen 'fullboth)
+
+
+(setq browse-url-browser-function 'eww-browse-url) ; use eww as default browser
+(setq browse-url-generic-program (executable-find "chromium-browser")
+	shr-external-browser 'browse-url-generic)
+
+
+
+
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
+
+;; Customise the location for installed packages
+(setq package-user-dir "~/Dropbox/sources/behrica-pack/lib/elpa")
+
+;; Add all packages to the load path
+(let ((base "~/Dropbox/sources/behrica-pack/lib/elpa"))
+  (add-to-list 'load-path base)
+  (dolist (f (directory-files base))
+    (let ((name (concat base "/" f)))
+      (when (and (file-directory-p name)
+                 (not (equal f ".."))
+                 (not (equal f ".")))
+        (add-to-list 'load-path name)))))
+
+                                        (require 'rich-minority)
+(require 'smart-mode-line)
+(sml/setup)
 
 (dired "~/Dropbox")

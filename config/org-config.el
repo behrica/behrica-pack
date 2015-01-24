@@ -27,3 +27,5 @@
   (interactive)
   (cancel-timer org-mobile-sync-timer))
 (org-mobile-sync-enable)
+
+(set-variable 'org-export-allow-bind-keywords t)
