@@ -215,25 +215,9 @@ user."
 
 
 
-(defun move-line-down ()
-  (interactive)
-  (let ((col (current-column)))
-    (save-excursion
-      (forward-line)
-      (transpose-lines 1))
-    (forward-line)
-    (move-to-column col)))
+(require 'move-lines)
+(global-set-key (kbd "<C-S-down>") 'move-lines-down)
+(global-set-key (kbd "<C-S-up>") 'move-lines-up)
 
-(defun move-line-up ()
-  (interactive)
-  (let ((col (current-column)))
-    (save-excursion
-      (forward-line)
-      (transpose-lines -1))
-    (move-to-column col)))
-
-(global-set-key (kbd "<C-S-down>") 'move-line-down)
-
-(global-set-key (kbd "<C-S-up>") 'move-line-up)
 
 (dired "~/Dropbox")
