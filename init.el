@@ -128,6 +128,9 @@
                  (not (equal f ".")))
         (add-to-list 'load-path name)))))
 
+(package-initialize)
+
+
 (require 'rich-minority)
 (require 'smart-mode-line)
 
@@ -160,17 +163,17 @@
 
  (global-set-key "\C-c\C-k" 'copy-line)
 (defun duplicate-current-line (&optional n)
-      "duplicate current line, make more than 1 copy given a numeric argument"
-      (interactive "p")
-      (save-excursion
-        (let ((nb (or n 1))
+  "duplicate current line, make more than 1 copy given a numeric argument"
+  (interactive "p")
+  (save-excursion
+    (let ((nb (or n 1))
     	  (current-line (thing-at-point 'line)))
-          ;; when on last line, insert a newline first
-          (when (or (= 1 (forward-line 1)) (eq (point) (point-max)))
+      ;; when on last line, insert a newline first
+      (when (or (= 1 (forward-line 1)) (eq (point) (point-max)))
     	(insert "\n"))
 
-          ;; now insert as many time as requested
-          (while (> n 0)
+      ;; now insert as many time as requested
+      (while (> n 0)
     	(insert current-line)
     	(decf n)))))
 
@@ -181,10 +184,10 @@
 
 (require 'highlight-tail)
 (setq highlight-tail-colors '(("black" . 0)
-                               ("#bc2525" . 25)
-                               ("black" . 100)))
+                              ("#bc2525" . 25)
+                              ("black" . 100)))
 (setq highlight-tail-steps 10
-       highlight-tail-timer 0.05)
+      highlight-tail-timer 0.05)
 
 (highlight-tail-reload)
 
@@ -205,5 +208,32 @@ user."
 
 (global-aggressive-indent-mode 1)
 
+
+(require 'lispy)
+(global-set-key (kbd "C-c d") 'lispy-describe-inline)
+(global-set-key (kbd "C-c p") 'lispy-arglist-inline)
+
+
+
+(defun move-line-down ()
+  (interactive)
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (transpose-lines 1))
+    (forward-line)
+    (move-to-column col)))
+
+(defun move-line-up ()
+  (interactive)
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (transpose-lines -1))
+    (move-to-column col)))
+
+(global-set-key (kbd "<C-S-down>") 'move-line-down)
+
+(global-set-key (kbd "<C-S-up>") 'move-line-up)
 
 (dired "~/Dropbox")
