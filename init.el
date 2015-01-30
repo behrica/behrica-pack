@@ -13,7 +13,7 @@
 
 
 (setq url-using-proxy t)
-(setq url-proxy-services  '(("http" . "127.0.0.1:3128")))
+(setq url-proxy-services  '(("http" . "localhost:3128")))
 
 (autoload 'gfm-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
@@ -107,7 +107,7 @@
 
 (setq browse-url-browser-function 'eww-browse-url) ; use eww as default browser
 (setq browse-url-generic-program (executable-find "chromium-browser")
-	shr-external-browser 'browse-url-generic)
+      shr-external-browser 'browse-url-generic)
 
 
 
@@ -136,32 +136,32 @@
 
 (custom-set-variables
  '(custom-safe-themes
-  (quote
-   ("e56f1b1c1daec5dbddc50abd00fcd00f6ce4079f4a7f66052cf16d96412a09a9" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default))))
+   (quote
+    ("e56f1b1c1daec5dbddc50abd00fcd00f6ce4079f4a7f66052cf16d96412a09a9" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default))))
 
 
- (defun copy-line (arg)
-    "Copy lines (as many as prefix argument) in the kill ring.
+(defun copy-line (arg)
+  "Copy lines (as many as prefix argument) in the kill ring.
       Ease of use features:
       - Move to start of next line.
       - Appends the copy on sequential calls.
       - Use newline as last char even on the last line of the buffer.
       - If region is active, copy its lines."
-    (interactive "p")
-    (let ((beg (line-beginning-position))
-          (end (line-end-position arg)))
-      (when mark-active
-        (if (> (point) (mark))
-            (setq beg (save-excursion (goto-char (mark)) (line-beginning-position)))
-          (setq end (save-excursion (goto-char (mark)) (line-end-position)))))
-      (if (eq last-command 'copy-line)
-          (kill-append (buffer-substring beg end) (< end beg))
-        (kill-ring-save beg end)))
-    (kill-append "\n" nil)
-    (beginning-of-line (or (and arg (1+ arg)) 2))
-    (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))
+  (interactive "p")
+  (let ((beg (line-beginning-position))
+        (end (line-end-position arg)))
+    (when mark-active
+      (if (> (point) (mark))
+          (setq beg (save-excursion (goto-char (mark)) (line-beginning-position)))
+        (setq end (save-excursion (goto-char (mark)) (line-end-position)))))
+    (if (eq last-command 'copy-line)
+        (kill-append (buffer-substring beg end) (< end beg))
+      (kill-ring-save beg end)))
+  (kill-append "\n" nil)
+  (beginning-of-line (or (and arg (1+ arg)) 2))
+  (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))
 
- (global-set-key "\C-c\C-k" 'copy-line)
+(global-set-key "\C-c\C-k" 'copy-line)
 (defun duplicate-current-line (&optional n)
   "duplicate current line, make more than 1 copy given a numeric argument"
   (interactive "p")
@@ -219,5 +219,22 @@ user."
 (global-set-key (kbd "<C-S-down>") 'move-lines-down)
 (global-set-key (kbd "<C-S-up>") 'move-lines-up)
 
+
+(require 'guide-key)
+(guide-key-mode 1)
+
+
+(require 'cider-grimoire)
+(require 'cider-inspector)
+(require 'cider-selector)
+(require 'cider-browse-ns)
+(require 'cider-classpath)
+
+
+(setq guide-key/guide-key-sequence '("C-x" "C-c"))
+(setq guide-key/recursive-key-sequence-flag t)
+
+
+(require 'hide-comnt)
 
 (dired "~/Dropbox")
