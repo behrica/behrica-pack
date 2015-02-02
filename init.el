@@ -5,10 +5,13 @@
 
 ;; Load bindings config
 (live-load-config-file "bindings.el")
+(live-load-config-file "packages-config.el")
 (live-load-config-file "magit-config.el")
 (live-load-config-file "org-config.el")
 (live-load-config-file "ess-config.el")
 (live-load-config-file "tex-config.el")
+(live-load-config-file "edit-config.el")
+(live-load-config-file "gnus-config.el")
 
 
 
@@ -25,13 +28,9 @@
 (add-to-list 'auto-mode-alist'("\.md\'" . markdown-mode))
 (live-add-pack-lib "polymode")
 (live-add-pack-lib "polymode/modes")
+(live-add-pack-lib "python-mode")
 
 
-(defun hide-eol ()
-  "Do not show ^M in files containing mixed UNIX and DOS line endings."
-  (interactive)
-  (setq buffer-display-table (make-display-table))
-  (aset buffer-display-table ?\^M []))
 
 
 (defun toggle-fullscreen-x11 ()
@@ -58,12 +57,6 @@
 (set-face-attribute 'ac-selection-face nil   :background "SteelBlue4" :foreground "white")
 (set-face-attribute 'popup-tip-face    nil   :background "#003A4E" :foreground "light gray")
 
-(defun clear-shell ()
-  (interactive)
-  (let ((old-max comint-buffer-maximum-size))
-    (setq comint-buffer-maximum-size 0)
-    (comint-truncate-buffer)
-    (setq comint-buffer-maximum-size old-max)))
 
 
 
@@ -73,26 +66,6 @@
 (require 'sunrise-commander)
 
 
-(setq gnus-select-method
-      '(nnimap "gmail"
-	       (nnimap-address "imap.gmail.com")
-	       (nnimap-server-port 993)
-	       (nnimap-stream ssl)))
-
-(setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-      smtpmail-auth-credentials '(("smtp.gmail.com" 587
-				   "carsten.behring@gmail.com" nil))
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 587
-      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
-
-
-(setq gnus-select-method
-      '(nnimap "localhost"
-               (nnimap-server-port 1143)
-               (nnimap-stream network)))
 
 
 
@@ -110,23 +83,6 @@
 
 
 
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
-
-;; Customise the location for installed packages
-(setq package-user-dir "~/Dropbox/sources/behrica-pack/lib/elpa")
-
-;; Add all packages to the load path
-(let ((base "~/Dropbox/sources/behrica-pack/lib/elpa"))
-  (add-to-list 'load-path base)
-  (dolist (f (directory-files base))
-    (let ((name (concat base "/" f)))
-      (when (and (file-directory-p name)
-                 (not (equal f ".."))
-                 (not (equal f ".")))
-        (add-to-list 'load-path name)))))
-
-(package-initialize)
 
 
 (require 'rich-minority)
@@ -138,44 +94,6 @@
     ("e56f1b1c1daec5dbddc50abd00fcd00f6ce4079f4a7f66052cf16d96412a09a9" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default))))
 
 
-(defun copy-line (arg)
-  "Copy lines (as many as prefix argument) in the kill ring.
-      Ease of use features:
-      - Move to start of next line.
-      - Appends the copy on sequential calls.
-      - Use newline as last char even on the last line of the buffer.
-      - If region is active, copy its lines."
-  (interactive "p")
-  (let ((beg (line-beginning-position))
-        (end (line-end-position arg)))
-    (when mark-active
-      (if (> (point) (mark))
-          (setq beg (save-excursion (goto-char (mark)) (line-beginning-position)))
-        (setq end (save-excursion (goto-char (mark)) (line-end-position)))))
-    (if (eq last-command 'copy-line)
-        (kill-append (buffer-substring beg end) (< end beg))
-      (kill-ring-save beg end)))
-  (kill-append "\n" nil)
-  (beginning-of-line (or (and arg (1+ arg)) 2))
-  (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))
-
-(global-set-key "\C-c\C-k" 'copy-line)
-(defun duplicate-current-line (&optional n)
-  "duplicate current line, make more than 1 copy given a numeric argument"
-  (interactive "p")
-  (save-excursion
-    (let ((nb (or n 1))
-    	  (current-line (thing-at-point 'line)))
-      ;; when on last line, insert a newline first
-      (when (or (= 1 (forward-line 1)) (eq (point) (point-max)))
-    	(insert "\n"))
-
-      ;; now insert as many time as requested
-      (while (> n 0)
-    	(insert current-line)
-    	(decf n)))))
-
-(global-set-key (kbd "C-c C-l") 'duplicate-current-line)
 
 (sml/setup)
 
@@ -189,8 +107,6 @@
 
 (highlight-tail-reload)
 
-(global-undo-tree-mode)
-(global-set-key (kbd "C-z") 'undo-tree-visualize)
 
 (require 'tramp)
 
@@ -213,9 +129,6 @@ user."
 
 
 
-(require 'move-lines)
-(global-set-key (kbd "<C-S-down>") 'move-lines-down)
-(global-set-key (kbd "<C-S-up>") 'move-lines-up)
 
 
 (require 'guide-key)
@@ -233,21 +146,15 @@ user."
 (setq guide-key/recursive-key-sequence-flag t)
 
 
-(require 'hide-comnt)
+(require 'python-mode)
+(setq-default py-shell-name "python3")
 
 
-(defun save-buffer-if-visiting-file (&optional args)
-  "Save the current buffer only if it is visiting a file"
-  (interactive)
-  (if (and (buffer-file-name) (buffer-modified-p))
-      (save-buffer args)))
-
-(add-hook 'auto-save-hook 'save-buffer-if-visiting-file)
-
-
-(setq auto-save-interval 100
-      auto-save-timeout 100)
-
+                                        ; switch to the interpreter after executing code
+                                        ;(setq py-shell-switch-buffers-on-execute-p t)
+                                        ;(setq py-switch-buffers-on-execute-p t)
+                                        ; don't split windows
+(setq py-split-window-on-execute t)
 
 
 (dired "~/Dropbox")
