@@ -8,12 +8,15 @@
 (live-load-config-file "magit-config.el")
 (live-load-config-file "org-config.el")
 (live-load-config-file "ess-config.el")
+(live-load-config-file "tex-config.el")
 
 
 
+(setq url-proxy-services
+      '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+        ("http" . "127.0.0.1:3128")
+        ("https" . "127.0.0.1:3128")))
 
-(setq url-using-proxy t)
-(setq url-proxy-services  '(("http" . "localhost:3128")))
 
 (autoload 'gfm-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
@@ -56,16 +59,15 @@
 (set-face-attribute 'popup-tip-face    nil   :background "#003A4E" :foreground "light gray")
 
 (defun clear-shell ()
-   (interactive)
-   (let ((old-max comint-buffer-maximum-size))
-     (setq comint-buffer-maximum-size 0)
-     (comint-truncate-buffer)
-     (setq comint-buffer-maximum-size old-max)))
+  (interactive)
+  (let ((old-max comint-buffer-maximum-size))
+    (setq comint-buffer-maximum-size 0)
+    (comint-truncate-buffer)
+    (setq comint-buffer-maximum-size old-max)))
 
 
 
 (setq ispell-silently-savep t)
-
 
 (autoload 'sunrise-commander "sunrise-commander.el")
 (require 'sunrise-commander)
@@ -94,15 +96,11 @@
 
 
 
-
-
 (require 'git-timemachine)
 
 
 
 (server-start)
-
-;;(set-frame-parameter nil 'fullscreen 'fullboth)
 
 
 (setq browse-url-browser-function 'eww-browse-url) ; use eww as default browser
@@ -236,5 +234,20 @@ user."
 
 
 (require 'hide-comnt)
+
+
+(defun save-buffer-if-visiting-file (&optional args)
+  "Save the current buffer only if it is visiting a file"
+  (interactive)
+  (if (and (buffer-file-name) (buffer-modified-p))
+      (save-buffer args)))
+
+(add-hook 'auto-save-hook 'save-buffer-if-visiting-file)
+
+
+(setq auto-save-interval 100
+      auto-save-timeout 100)
+
+
 
 (dired "~/Dropbox")
