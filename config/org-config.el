@@ -29,3 +29,17 @@
 (org-mobile-sync-enable)
 
 (set-variable 'org-export-allow-bind-keywords t)
+
+
+(org-add-link-type "thunderlink" 'org-thunderlink-open)
+
+(defun org-thunderlink-open (path)
+  (let ( (command (concat  "thunderbird -thunderlink " "thunderlink:" path)))
+    (message command)
+    (shell-command command)))
+
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+(define-key global-map "\C-cc" 'org-capture)
+(setq org-capture-templates
+      '(("t" "Simple todo" entry (file+headline (concat org-directory "/notes.org") "Tasks")
+         "* TODO %?\n")))
