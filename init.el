@@ -146,21 +146,6 @@ user."
 (setq guide-key/recursive-key-sequence-flag t)
 
 
-(require 'python-mode)
-(setq-default py-shell-name "python3")
 
-
-                                        ; switch to the interpreter after executing code
-                                        ;(setq py-shell-switch-buffers-on-execute-p t)
-                                        ;(setq py-switch-buffers-on-execute-p t)
-                                        ; don't split windows
-(setq py-split-window-on-execute t)
-
-(eval-after-load "python"
-  '(define-key python-mode-map "\C-cx" 'jedi-direx:pop-to-buffer))
-(add-hook 'jedi-mode-hook 'jedi-direx:setup)
-
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
 
 (dired "~/Dropbox")
