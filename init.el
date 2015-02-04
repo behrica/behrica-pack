@@ -12,6 +12,7 @@
 (live-load-config-file "tex-config.el")
 (live-load-config-file "edit-config.el")
 (live-load-config-file "gnus-config.el")
+(live-load-config-file "python-config.el")
 
 
 
@@ -80,11 +81,6 @@
 (setq browse-url-generic-program (executable-find "chromium-browser")
       shr-external-browser 'browse-url-generic)
 
-
-
-
-
-
 (require 'rich-minority)
 (require 'smart-mode-line)
 
@@ -129,8 +125,6 @@ user."
 
 
 
-
-
 (require 'guide-key)
 (guide-key-mode 1)
 
@@ -145,31 +139,6 @@ user."
 (setq guide-key/guide-key-sequence '("C-x" "C-c"))
 (setq guide-key/recursive-key-sequence-flag t)
 
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i")
 
-
-(defun append-to-buffer-phyton (buffer start end)
-  (interactive
-   (list "*Python*"
-         (region-beginning) (region-end)))
-  (let* ((oldbuf (current-buffer))
-         (append-to (get-buffer-create buffer))
-         (windows (get-buffer-window-list append-to t t))
-         point)
-    (save-excursion
-      (with-current-buffer append-to
-        (setq point (point))
-        (barf-if-buffer-read-only)
-        (insert-buffer-substring oldbuf start end)
-        (comint-send-input)
-        (dolist (window windows)
-          (when (= (window-point window) point)
-            (set-window-point window (point))))))))
-
-(define-key python-mode-map (kbd "C-c C-a") 'append-to-buffer-phyton)
-(fset 'send-line-to-python
-      [?\C-a ?\C-  down ?\C-c ?\C-a])
-(define-key python-mode-map (kbd "C-<return>") 'send-line-to-python)
 
 (dired "~/Dropbox")
