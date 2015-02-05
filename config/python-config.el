@@ -36,8 +36,8 @@
 
 (defun lookup-help()
   (interactive)
-                                        ;  (message "test")
-  (message (python-shell-send-string-no-output
-            (format  "help(%s)"  (python-info-current-symbol)))))
+  (with-output-to-temp-buffer "*Help*"
+    (princ (python-shell-send-string-no-output
+            (format  "help(%s)"  (python-info-current-symbol))))))
 
-(define-key python-mode-map (kbd "C-h f") 'lookup-help)
+(define-key python-mode-map (kbd "C-c C-d") 'lookup-help)
