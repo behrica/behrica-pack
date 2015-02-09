@@ -1,6 +1,6 @@
 (require 'python)
 
-(setq python-shell-interpreter "ipython"
+(setq python-shell-interpreter "ipython3"
       python-shell-interpreter-args "-i")
 
 (defun append-to-buffer-phyton (buffer start end)
@@ -41,3 +41,4 @@
             (format  "help(%s)"  (python-info-current-symbol))))))
 
 (define-key python-mode-map (kbd "C-c C-d") 'lookup-help)
+(define-key inferior-python-mode-map (kbd "C-c C-d") 'lookup-help)

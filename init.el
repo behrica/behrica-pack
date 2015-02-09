@@ -124,10 +124,8 @@ user."
 (global-set-key (kbd "C-c p") 'lispy-arglist-inline)
 
 
-
 (require 'guide-key)
 (guide-key-mode 1)
-
 
 (require 'cider-grimoire)
 (require 'cider-inspector)
@@ -139,6 +137,14 @@ user."
 (setq guide-key/guide-key-sequence '("C-x" "C-c"))
 (setq guide-key/recursive-key-sequence-flag t)
 
-
-
 (dired "~/Dropbox")
+
+(defhydra hydra-zoom (global-map "<f5>")
+  "zoom"
+  ("g" text-scale-increase "in")
+  ("l" text-scale-decrease "out"))
+
+(setq
+ scroll-margin 0
+ scroll-conservatively 100000
+ scroll-preserve-screen-position 1)
