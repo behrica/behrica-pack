@@ -171,3 +171,9 @@ user."
 
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x f") 'helm-recentf)
+
+(require 'company)
+(global-company-mode)
+
+(company-quickhelp-mode 1)
+(setq company-quickhelp-delay 0.1)
