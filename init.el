@@ -148,3 +148,26 @@ user."
  scroll-margin 0
  scroll-conservatively 100000
  scroll-preserve-screen-position 1)
+
+
+
+(require 'powerline)
+(powerline-center-theme)
+(setq powerline-color1 "#073642")
+(setq powerline-color2 "#002b36")
+
+(set-face-attribute 'mode-line nil
+                    :foreground "#fdf6e3"
+                    :background "#000020"
+                    :box nil)
+(set-face-attribute 'mode-line-inactive nil
+                    :box nil)
+
+
+(ido-mode -1)
+
+(require 'helm-config)
+(helm-mode 1)
+
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x f") 'helm-recentf)
