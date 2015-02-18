@@ -177,3 +177,7 @@ user."
 
 (company-quickhelp-mode 1)
 (setq company-quickhelp-delay 0.1)
+
+
+(setq undo-tree-visualizer-timestamps t)
+(setq undo-tree-visualizer-diff t)
